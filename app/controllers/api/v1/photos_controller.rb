@@ -1,10 +1,11 @@
-class PhotosController < ApplicationController
+class Api::V1::PhotosController < ApplicationController
   def index
-    photos = Photo.all
+    photos = current_user.photos
     render json: photos
   end
 
   def show
+    photo = Photo.find(params[:id])
   end
 
   def new
@@ -12,17 +13,23 @@ class PhotosController < ApplicationController
   end
 
   def create
-    photo = Photo.create(photo_params)
+    photo = current_user.photos.create(photo_params)
     render json: photo
   end
 
   def edit
   end
 
+  def destroy
+    photo = current_user.photos.find(params[:id])
+    photo.destroy
+    render json: photo
+  end
+
   private
 
   def photo_params
-    params.require(:photo).permit(:title, :description, :location, :image_url, :user_id, :album_id)
+    params.permit(:title, :description, :location, :image_url, :user_id, :album_id)
   end
 
 end

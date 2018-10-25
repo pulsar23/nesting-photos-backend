@@ -1,6 +1,6 @@
-class AlbumsController < ApplicationController
+class Api::V1::AlbumsController < ApplicationController
   def index
-    albums = Album.all
+    albums = current_user.own_albums
     render json: albums
   end
 
@@ -9,10 +9,12 @@ class AlbumsController < ApplicationController
   end
 
   def new
+    album = Album.new
   end
 
   def create
-    album = Album.create(album_params)
+    album = current_user.albums.create(album_params)
+    #userAlbum = UserAlbum.create(user_id: params[:admin_id], album_id: album.id)
     render json: album
   end
 
@@ -22,6 +24,7 @@ class AlbumsController < ApplicationController
   private
 
   def album_params
-    params.require(:album).permit(:title, :admin_id)
+    params.permit(:title, :admin_id)
+    #params.require(:album).permit(:title, :admin_id)
   end
 end
