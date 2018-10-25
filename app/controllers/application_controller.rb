@@ -11,8 +11,7 @@ class ApplicationController < ActionController::API
 
   def decoded_token
     if auth_header
-      token = auth_header.split()[1]
-
+      token = auth_header.split(' ')[1]
       begin
         JWT.decode(token, 'app_wide_secret_for_every_user')[0]
       rescue JWT::DecodeError

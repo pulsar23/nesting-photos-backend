@@ -2,7 +2,12 @@ class Api::V1::UsersController < ApplicationController
   skip_before_action :check_authentication, only: [:create]
 
   def index
+  end
 
+  def albums
+    user = User.find(params[:id])
+    albums = user.albums
+    render json: albums
   end
 
   def show
@@ -16,11 +21,6 @@ class Api::V1::UsersController < ApplicationController
   def create
 
     user = User.new(user_params)
-    # user.username = params[:username]
-    # user.password = params[:password]
-    # user.email = params[:email]
-#byebug
-
     if (user.save)
       render json: {
         user: user,
@@ -43,7 +43,5 @@ class Api::V1::UsersController < ApplicationController
   private
     def user_params
       params.permit(:username, :email, :password)
-      #params.require(:user).permit(:username, :email, :password)
-      #params.require(:user).permit(:username,:email,:email_confirmation,:password,:password_confirmation)
     end
 end
